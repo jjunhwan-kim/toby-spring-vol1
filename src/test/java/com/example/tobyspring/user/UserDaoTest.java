@@ -1,5 +1,7 @@
 package com.example.tobyspring.user;
 
+import com.example.tobyspring.user.dao.ConnectionMaker;
+import com.example.tobyspring.user.dao.DConnectionMaker;
 import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,9 @@ class UserDaoTest {
 
     @Test
     public void userDaoTest() throws SQLException, ClassNotFoundException {
-        UserDao dao = new UserDao();
+        ConnectionMaker connectionMaker = new DConnectionMaker();
+
+        UserDao dao = new UserDao(connectionMaker);
 
         User user = new User();
         user.setId("whiteship");
