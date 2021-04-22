@@ -1,17 +1,19 @@
 package com.example.tobyspring.user;
 
 import com.example.tobyspring.user.domain.User;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserDaoTest {
 
     @Test
     public void userDaoTest() throws SQLException, ClassNotFoundException {
-        UserDao dao = new NUserDao();
+        UserDao dao = new UserDao();
 
         User user = new User();
         user.setId("whiteship");
@@ -26,5 +28,9 @@ class UserDaoTest {
         System.out.println(user2.getName());
         System.out.println(user2.getPassword());
         System.out.println(user2.getId() + " 조회 성공");
+
+        assertThat(user.getId()).isEqualTo(user2.getId());
+        assertThat(user.getName()).isEqualTo(user2.getName());
+        assertThat(user.getPassword()).isEqualTo(user2.getPassword());
     }
 }
