@@ -1,4 +1,4 @@
-package com.example.tobyspring.user;
+package com.example.tobyspring.user.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

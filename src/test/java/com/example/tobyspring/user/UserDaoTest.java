@@ -1,13 +1,12 @@
 package com.example.tobyspring.user;
 
+import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserDaoTest {
 
