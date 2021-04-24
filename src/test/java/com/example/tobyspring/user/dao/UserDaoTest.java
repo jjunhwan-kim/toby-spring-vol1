@@ -1,13 +1,10 @@
 package com.example.tobyspring.user.dao;
 
-import com.example.tobyspring.user.dao.ConnectionMaker;
-import com.example.tobyspring.user.dao.DConnectionMaker;
-import com.example.tobyspring.user.dao.DaoFactory;
-import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.sql.SQLException;
 
@@ -17,7 +14,8 @@ class UserDaoTest {
 
     @Test
     public void userDaoTest() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+//        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao userDao = context.getBean("userDao", UserDao.class);
 
         User user = new User();
