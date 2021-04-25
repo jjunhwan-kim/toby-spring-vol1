@@ -23,14 +23,10 @@ class UserDaoTest {
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
 
-        User user = new User();
-        user.setId("gyumee");
-        user.setName("박성철");
-        user.setPassword("springno1");
+        User user = new User("gyumee", "박성철", "springno1");
 
         userDao.add(user);
 
-        System.out.println(user.getId() + " 등록 성공");
         assertThat(userDao.getCount()).isEqualTo(1);
 
         User user2 = userDao.get(user.getId());
