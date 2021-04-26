@@ -1,16 +1,18 @@
 package com.example.tobyspring.user.dao;
 
 import com.example.tobyspring.user.domain.User;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserDaoTest {
 
@@ -61,4 +63,16 @@ class UserDaoTest {
         dao.add(user3);
         assertThat(dao.getCount()).isEqualTo(3);
     }
+
+    @Test
+    public void getUserFailure() throws SQLException {
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+
+        UserDao dao = context.getBean("userDao", UserDao.class);
+        dao.deleteAll();
+        assertThat(dao.getCount()).isEqualTo(0);
+
+        assertThrows(EmptyResultDataAccessException.class, () -> dao.get("unknown_id"));    // EmptyResultDataAccessException 예외가 발생하면 테스트 성공
+    }
+
 }
