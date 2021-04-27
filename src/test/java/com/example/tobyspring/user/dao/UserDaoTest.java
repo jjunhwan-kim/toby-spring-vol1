@@ -3,8 +3,12 @@ package com.example.tobyspring.user.dao;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -12,7 +16,10 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+//@ExtendWith(SpringExtension.class)
+//@ContextConfiguration(locations = "/test-applicationContext.xml")
 class UserDaoTest {
+//    @Autowired
     private UserDao dao;
     private User user1;
     private User user2;
@@ -23,6 +30,10 @@ class UserDaoTest {
         dao = new UserDao();
         DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/test", "sa", "", true);
         dao.setDataSource(dataSource);
+
+        JdbcContext jdbcContext = new JdbcContext();
+        jdbcContext.setDataSource(dataSource);
+        dao.setJdbcContext(jdbcContext);
 
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
