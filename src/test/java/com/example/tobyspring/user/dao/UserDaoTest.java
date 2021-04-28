@@ -31,10 +31,6 @@ class UserDaoTest {
         DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/test", "sa", "", true);
         dao.setDataSource(dataSource);
 
-        JdbcContext jdbcContext = new JdbcContext();
-        jdbcContext.setDataSource(dataSource);
-        dao.setJdbcContext(jdbcContext);
-
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
         user3 = new User("bumjin", "박범진", "springno3");
