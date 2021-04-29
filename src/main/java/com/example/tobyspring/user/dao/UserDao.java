@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 public class UserDao {
     private DataSource dataSource;
@@ -24,16 +25,16 @@ public class UserDao {
 
     public User get(String id) throws SQLException {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?",
-            new RowMapper<User>() {
-                @Override
-                public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    User user = new User();
-                    user.setId(rs.getString("id"));
-                    user.setName(rs.getString("name"));
-                    user.setPassword(rs.getString("password"));
-                    return user;
-                }
-            }, id);
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                }, id);
     }
 
     public void deleteAll() throws SQLException {
@@ -69,5 +70,19 @@ public class UserDao {
         Integer value = this.jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
         if (value == null) return 0;
         return value;
+    }
+
+    public List<User> getAll() {
+        return this.jdbcTemplate.query("select * from users order by id",
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                });
     }
 }
