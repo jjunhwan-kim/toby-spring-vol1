@@ -31,25 +31,19 @@ public class UserDao {
 
     public User get(String id) throws SQLException {
         return this.jdbcContext.workWithStatementStrategyAndRowMapper(
-            new StatementStrategy() {
-                @Override
-                public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                    PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
-                    ps.setString(1, id);
+            c -> {
+                PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
+                ps.setString(1, id);
 
-                    return ps;
-                }
+                return ps;
             },
-            new JdbcRowMapper<User>() {
-                @Override
-                public User mapRow(ResultSet rs) throws SQLException {
-                    User user;
-                    user = new User();
-                    user.setId(rs.getString("id"));
-                    user.setName(rs.getString("name"));
-                    user.setPassword(rs.getString("password"));
-                    return user;
-                }
+            rs -> {
+                User user;
+                user = new User();
+                user.setId(rs.getString("id"));
+                user.setName(rs.getString("name"));
+                user.setPassword(rs.getString("password"));
+                return user;
             }
         );
     }
@@ -60,19 +54,11 @@ public class UserDao {
 
     public int getCount() throws SQLException {
         return this.jdbcContext.workWithStatementStrategyAndRowMapper(
-            new StatementStrategy() {
-                @Override
-                public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                    PreparedStatement ps = c.prepareStatement("select count(*) from users");
-                    return ps;
-                }
+            c -> {
+                PreparedStatement ps = c.prepareStatement("select count(*) from users");
+                return ps;
             },
-            new JdbcRowMapper<Integer>() {
-                @Override
-                public Integer mapRow(ResultSet rs) throws SQLException {
-                    return rs.getInt(1);
-                }
-            }
+            rs -> rs.getInt(1)
         );
     }
 }
