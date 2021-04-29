@@ -3,16 +3,19 @@ package com.example.tobyspring.learningtest.template;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class Calculator {
-    public Integer fileReadTemplate(String filepath, BufferedReaderCallback callback) throws IOException {
+    public Integer lineReadTemplate(String filepath, LineCallback callback, int initVal) throws IOException {
         BufferedReader br = null;
 
         try {
             br = new BufferedReader(new FileReader(filepath));
-            int ret = callback.doSomethingWithReader(br);
-            return ret;
+            Integer res = initVal;
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                res = callback.doSomethingWithLine(line, res);
+            }
+            return res;
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -31,32 +34,22 @@ public class Calculator {
     }
 
     public Integer calcSum(String filepath) throws IOException {
-        BufferedReaderCallback sumCallback = new BufferedReaderCallback() {
+        LineCallback sumCallback = new LineCallback() {
             @Override
-            public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-                Integer sum = 0;
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    sum += Integer.valueOf(line);
-                }
-                return sum;
+            public Integer doSomethingWithLine(String line, Integer value) throws IOException {
+                return value + Integer.valueOf(line);
             }
         };
-        return fileReadTemplate(filepath, sumCallback);
+        return lineReadTemplate(filepath, sumCallback, 0);
     }
 
     public Integer calcMultiply(String filepath) throws IOException {
-        BufferedReaderCallback multiplyCallback = new BufferedReaderCallback() {
+        LineCallback multiplyCallback = new LineCallback() {
             @Override
-            public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-                Integer multiply = 1;
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    multiply *= Integer.valueOf(line);
-                }
-                return multiply;
+            public Integer doSomethingWithLine(String line, Integer value) throws IOException {
+                return value * Integer.valueOf(line);
             }
         };
-        return fileReadTemplate(filepath, multiplyCallback);
+        return lineReadTemplate(filepath, multiplyCallback, 1);
     }
 }
