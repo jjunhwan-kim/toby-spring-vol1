@@ -1,8 +1,11 @@
 package com.example.tobyspring.user.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JdbcContext {
@@ -31,6 +34,48 @@ public class JdbcContext {
         } catch (SQLException e) {
             throw e;
         } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
+    public <T> T workWithStatementStrategyAndRowMapper(StatementStrategy stmt, JdbcRowMapper<T> rowMapper) throws SQLException {
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            c = dataSource.getConnection();
+
+            ps = stmt.makePreparedStatement(c);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rowMapper.mapRow(rs);
+            }
+            else {
+                throw new EmptyResultDataAccessException(1);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
             if (ps != null) {
                 try {
                     ps.close();

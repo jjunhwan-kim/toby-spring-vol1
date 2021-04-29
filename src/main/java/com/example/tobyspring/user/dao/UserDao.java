@@ -1,7 +1,6 @@
 package com.example.tobyspring.user.dao;
 
 import com.example.tobyspring.user.domain.User;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,12 +17,6 @@ public class UserDao {
         this.dataSource = dataSource;
     }
 
-/*
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-    }
-*/
-
     public void add(User user) throws SQLException {
         this.jdbcContext.workWithStatementStrategy(c -> {
             PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
@@ -37,27 +30,28 @@ public class UserDao {
     }
 
     public User get(String id) throws SQLException {
-        Connection c = dataSource.getConnection();
+        return this.jdbcContext.workWithStatementStrategyAndRowMapper(
+            new StatementStrategy() {
+                @Override
+                public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                    PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
+                    ps.setString(1, id);
 
-        PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
-        ps.setString(1, id);
-
-        ResultSet rs = ps.executeQuery();
-
-        User user = null;
-        if (rs.next()) {
-            user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-        }
-        rs.close();
-        ps.close();
-        c.close();
-
-        if (user == null) throw new EmptyResultDataAccessException(1);
-
-        return user;
+                    return ps;
+                }
+            },
+            new JdbcRowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet rs) throws SQLException {
+                    User user;
+                    user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setName(rs.getString("name"));
+                    user.setPassword(rs.getString("password"));
+                    return user;
+                }
+            }
+        );
     }
 
     public void deleteAll() throws SQLException {
@@ -65,39 +59,20 @@ public class UserDao {
     }
 
     public int getCount() throws SQLException {
-        Connection c = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            c = dataSource.getConnection();
-
-            ps = c.prepareStatement("select count(*) from users");
-
-            rs = ps.executeQuery();
-            rs.next();
-            return rs.getInt(1);
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
+        return this.jdbcContext.workWithStatementStrategyAndRowMapper(
+            new StatementStrategy() {
+                @Override
+                public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                    PreparedStatement ps = c.prepareStatement("select count(*) from users");
+                    return ps;
+                }
+            },
+            new JdbcRowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs) throws SQLException {
+                    return rs.getInt(1);
                 }
             }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                }
-            }
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        );
     }
 }
