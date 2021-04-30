@@ -29,9 +29,10 @@ class UserDaoTest {
     @BeforeEach
     public void setUp() {
         dao = new UserDao();
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/test", "sa", "", true);
-        dao.setDataSource(dataSource);
+//        DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/test", "sa", "", true);
+        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "", true);
 
+        dao.setDataSource(dataSource);
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
         user3 = new User("bumjin", "박범진", "springno3");
