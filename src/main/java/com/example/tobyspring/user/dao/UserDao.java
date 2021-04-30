@@ -1,6 +1,8 @@
 package com.example.tobyspring.user.dao;
 
 import com.example.tobyspring.user.domain.User;
+import com.mysql.cj.exceptions.MysqlErrorNumbers;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -30,6 +32,20 @@ public class UserDao {
     public void add(User user) {
         this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
     }
+
+    /*
+    public void add(User user) throws DuplicateUserIdException {
+        try {
+            this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
+        }
+        catch (SQLException e) {
+            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY)
+                throw new DuplicateUserIdException(e);  // 예외 전환
+            else
+                throw new RuntimeException(e);          // 예외 포장
+        }
+    }
+    */
 
     public User get(String id) {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?", this.userMapper, id);
