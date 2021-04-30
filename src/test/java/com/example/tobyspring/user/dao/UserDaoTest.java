@@ -17,10 +17,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(locations = "/test-applicationContext.xml")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = "/test-applicationContext.xml")
 class UserDaoTest {
-//    @Autowired
+    @Autowired
     private UserDao dao;
     private User user1;
     private User user2;
@@ -28,11 +28,11 @@ class UserDaoTest {
 
     @BeforeEach
     public void setUp() {
-        dao = new UserDao();
+//        dao = new UserDaoJdbc();
 //        DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/test", "sa", "", true);
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "", true);
-
-        dao.setDataSource(dataSource);
+//        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "", true);
+//
+//        dao.setDataSource(dataSource);
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
         user3 = new User("bumjin", "박범진", "springno3");
