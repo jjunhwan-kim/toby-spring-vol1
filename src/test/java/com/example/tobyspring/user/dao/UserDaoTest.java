@@ -1,5 +1,6 @@
 package com.example.tobyspring.user.dao;
 
+import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +40,9 @@ class UserDaoTest {
 //        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "", true);
 //
 //        dao.setDataSource(dataSource);
-        user1 = new User("gyumee", "박성철", "springno1");
-        user2 = new User("leegw700", "이길원", "springno2");
-        user3 = new User("bumjin", "박범진", "springno3");
+        user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
+        user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
+        user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -55,12 +56,10 @@ class UserDaoTest {
         assertThat(dao.getCount()).isEqualTo(2);
 
         User userget1 = dao.get(user1.getId());
-        assertThat(userget1.getName()).isEqualTo(user1.getName());
-        assertThat(userget1.getPassword()).isEqualTo(user1.getPassword());
+        checkSameUser(userget1, user1);
 
         User userget2 = dao.get(user2.getId());
-        assertThat(userget2.getName()).isEqualTo(user2.getName());
-        assertThat(userget2.getPassword()).isEqualTo(user2.getPassword());
+        checkSameUser(userget2, user2);
     }
 
     @Test
@@ -116,6 +115,9 @@ class UserDaoTest {
         assertThat(user1.getId()).isEqualTo(user2.getId());
         assertThat(user1.getName()).isEqualTo(user2.getName());
         assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
+        assertThat(user1.getLevel()).isEqualTo(user2.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user2.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user2.getRecommend());
     }
 
     @Test
