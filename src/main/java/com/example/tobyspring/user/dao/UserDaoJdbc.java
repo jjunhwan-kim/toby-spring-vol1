@@ -33,6 +33,7 @@ public class UserDaoJdbc implements UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Override
     public void add(User user) {
         this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values(?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
@@ -51,20 +52,29 @@ public class UserDaoJdbc implements UserDao {
     }
     */
 
+    @Override
     public User get(String id) {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?", this.userMapper, id);
     }
 
+    @Override
+    public void update(User user) {
+        this.jdbcTemplate.update("update users set name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?", user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+    }
+
+    @Override
     public void deleteAll() {
         this.jdbcTemplate.update("delete from users");
     }
 
+    @Override
     public int getCount() {
         Integer value = this.jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
         if (value == null) return 0;
         return value;
     }
 
+    @Override
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from users order by id", this.userMapper);
     }
