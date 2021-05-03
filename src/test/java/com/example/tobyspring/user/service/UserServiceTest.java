@@ -81,4 +81,37 @@ class UserServiceTest {
         assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
     }
 
+    static class TestUserService extends UserService {
+        private String id;
+
+        public TestUserService(String id) {
+            this.id = id;
+        }
+
+        @Override
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(this.id)) throw new TestUserServiceException();
+            super.upgradeLevel(user);
+        }
+    }
+
+    static class TestUserServiceException extends RuntimeException {
+    }
+
+    @Test
+    public void upgradeAllOrNothing() {
+        UserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(this.userDao);
+
+        userDao.deleteAll();
+        for (User user : users) userDao.add(user);
+
+        try {
+            testUserService.upgradeLevels();
+            fail("TestUserServiceException expected"); // upgradeLevels 메소드에서 Exception이 발생하지 않을 경우 테스트 실패
+        } catch (TestUserServiceException e) {
+        }
+
+        checkLevel(users.get(1), false); // 네 번쨰 사용자 레벨 업그레이드중 예외 발생시 두 번째 사용자도 원래 레벨로 돌아가야 함
+    }
 }
