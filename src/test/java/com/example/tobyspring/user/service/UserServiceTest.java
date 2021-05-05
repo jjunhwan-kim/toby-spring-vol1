@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,8 @@ class UserServiceTest {
     UserDao userDao;
     @Autowired
     UserService userService;
+    @Autowired
+    DataSource dataSource;
     List<User> users;
 
     @BeforeEach
@@ -40,7 +43,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void upgradeLevels() {
+    public void upgradeLevels() throws Exception {
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
@@ -99,8 +102,9 @@ class UserServiceTest {
     }
 
     @Test
-    public void upgradeAllOrNothing() {
+    public void upgradeAllOrNothing() throws Exception {
         UserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setDataSource(this.dataSource);
         testUserService.setUserDao(this.userDao);
 
         userDao.deleteAll();

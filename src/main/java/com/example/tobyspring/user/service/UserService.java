@@ -3,26 +3,52 @@ package com.example.tobyspring.user.service;
 import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserService {
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 50;
 
-    UserDao userDao;
+    private DataSource dataSource;
+    private UserDao userDao;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    public void upgradeLevels() {
-        List<User> users = userDao.getAll();
+    public void upgradeLevels() throws Exception {
+        TransactionSynchronizationManager.initSynchronization();
+        Connection c = DataSourceUtils.getConnection(dataSource);
+        c.setAutoCommit(false);
 
-        for (User user : users) {
-            if (canUpgradeLevel(user)) {
-                upgradeLevel(user);
+        try {
+            List<User> users = userDao.getAll();
+
+            for (User user : users) {
+                if (canUpgradeLevel(user)) {
+                    upgradeLevel(user);
+                }
             }
+            c.commit();
+        }
+        catch (Exception e) {
+            c.rollback();
+            throw e;
+        }
+        finally {
+            DataSourceUtils.releaseConnection(c, dataSource);
+            TransactionSynchronizationManager.unbindResource(this.dataSource);
+            TransactionSynchronizationManager.clearSynchronization();
         }
     }
 
