@@ -3,7 +3,6 @@ package com.example.tobyspring.user.service;
 import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,13 +15,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.tobyspring.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.example.tobyspring.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static com.example.tobyspring.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static com.example.tobyspring.user.service.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +31,8 @@ class UserServiceTest {
     UserDao userDao;
     @Autowired
     UserService userService;
+    @Autowired
+    UserServiceImpl userServiceImpl;
     @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
@@ -57,7 +57,7 @@ class UserServiceTest {
         for (User user : users) userDao.add(user);
 
         MockMailSender mockMailSender = new MockMailSender();
-        userService.setMailSender(mockMailSender);
+        userServiceImpl.setMailSender(mockMailSender);
 
         userService.upgradeLevels();
 
@@ -101,7 +101,7 @@ class UserServiceTest {
         assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
     }
 
-    static class TestUserService extends UserService {
+    static class TestUserService extends UserServiceImpl {
         private String id;
 
         public TestUserService(String id) {
@@ -120,16 +120,19 @@ class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothing() throws Exception {
-        UserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setTransactionManager(this.transactionManager);
-        testUserService.setUserDao(this.userDao);
-        testUserService.setMailSender(this.mailSender);
+        UserServiceImpl testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(userDao);
+        testUserService.setMailSender(mailSender);
+
+        UserServiceTx txUserService = new UserServiceTx();
+        txUserService.setTransactionManager(transactionManager);
+        txUserService.setUserService(testUserService);
 
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
         try {
-            testUserService.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserServiceException expected"); // upgradeLevels 메소드에서 Exception이 발생하지 않을 경우 테스트 실패
         } catch (TestUserServiceException e) {
         }
