@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -32,8 +31,6 @@ class UserServiceTest {
     @Autowired
     UserService userService;
     @Autowired
-    UserServiceImpl userServiceImpl;
-    @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
     MailSender mailSender;
@@ -51,21 +48,21 @@ class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeLevels() throws Exception {
-        userDao.deleteAll();
-        for (User user : users) userDao.add(user);
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+        MockUserDao mockUserDao = new MockUserDao(users);
+        userServiceImpl.setUserDao(mockUserDao);
 
         MockMailSender mockMailSender = new MockMailSender();
         userServiceImpl.setMailSender(mockMailSender);
 
-        userService.upgradeLevels();
+        userServiceImpl.upgradeLevels();
 
-        checkLevel(users.get(0), false);
-        checkLevel(users.get(1), true);
-        checkLevel(users.get(2), false);
-        checkLevel(users.get(3), true);
-        checkLevel(users.get(4), false);
+        List<User> updated = mockUserDao.getUpdated();
+        assertThat(updated.size()).isEqualTo(2);
+        checkUserAndLevel(updated.get(0), "joytouch", Level.SILVER);
+        checkUserAndLevel(updated.get(1), "madnite1", Level.GOLD);
 
         List<String> request = mockMailSender.getRequests();
         assertThat(request.size()).isEqualTo(2);
@@ -73,7 +70,12 @@ class UserServiceTest {
         assertThat(request.get(1)).isEqualTo(users.get(3).getEmail());
     }
 
-    private void checkLevel(User user, boolean upgraded) {
+    private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
+        assertThat(updated.getId()).isEqualTo(expectedId);
+        assertThat(updated.getLevel()).isEqualTo(expectedLevel);
+    }
+
+    private void checkLevelUpgraded(User user, boolean upgraded) {
         User userUpdate = userDao.get(user.getId());
         if (upgraded) {
             assertThat(userUpdate.getLevel()).isEqualTo(user.getLevel().nextLevel());
@@ -137,7 +139,7 @@ class UserServiceTest {
         } catch (TestUserServiceException e) {
         }
 
-        checkLevel(users.get(1), false); // 네 번쨰 사용자 레벨 업그레이드중 예외 발생시 두 번째 사용자도 원래 레벨로 돌아가야 함
+        checkLevelUpgraded(users.get(1), false); // 네 번쨰 사용자 레벨 업그레이드중 예외 발생시 두 번째 사용자도 원래 레벨로 돌아가야 함
     }
 
     static class MockMailSender implements MailSender {
@@ -155,6 +157,49 @@ class UserServiceTest {
         @Override
         public void send(SimpleMailMessage... mailMessages) throws MailException {
 
+        }
+    }
+
+    static class MockUserDao implements UserDao {
+        private List<User> users;
+        private List<User> updated = new ArrayList<>();
+
+        public MockUserDao(List<User> users) {
+            this.users = users;
+        }
+
+        public List<User> getUpdated() {
+            return updated;
+        }
+
+        @Override
+        public List<User> getAll() {
+            return users;
+        }
+
+        @Override
+        public void update(User user) {
+            updated.add(user);
+        }
+
+        @Override
+        public void add(User user) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public User get(String id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteAll() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getCount() {
+            throw new UnsupportedOperationException();
         }
     }
 }
