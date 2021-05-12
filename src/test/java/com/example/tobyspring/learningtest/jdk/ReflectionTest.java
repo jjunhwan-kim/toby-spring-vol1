@@ -3,6 +3,7 @@ package com.example.tobyspring.learningtest.jdk;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,5 +25,23 @@ public class ReflectionTest {
 
         Method charAtMethod = String.class.getMethod("charAt", int.class);
         assertThat((Character)charAtMethod.invoke(name, 0)).isEqualTo('S');
+    }
+
+    @Test
+    public void classClass() throws ClassNotFoundException {
+        Class c1 = String.class;
+        Class c2 = new String().getClass();
+        Class c3 = Class.forName("java.lang.String");
+
+
+        Constructor[] constructors = c1.getConstructors();
+        for (Constructor constructor : constructors) {
+            System.out.println(constructor);
+        }
+        System.out.println();
+        Method[] methods = c1.getMethods();
+        for (Method method : methods) {
+            System.out.println(method);
+        }
     }
 }
