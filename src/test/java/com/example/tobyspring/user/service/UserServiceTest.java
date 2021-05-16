@@ -3,6 +3,7 @@ package com.example.tobyspring.user.service;
 import com.example.tobyspring.user.dao.UserDao;
 import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
+import com.example.tobyspring.user.factory.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
+//@ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = UserFactory.class)
 class UserServiceTest {
     @Autowired
     UserDao userDao;
