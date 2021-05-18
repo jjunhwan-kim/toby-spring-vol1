@@ -141,6 +141,11 @@ class UserServiceTest {
         assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
     }
 
+    @Test
+    public void advisorAutoProxyCreator() {
+        assertThat(testUserService).isInstanceOf(java.lang.reflect.Proxy.class);
+    }
+
     static class TestUserServiceImpl extends UserServiceImpl {
         private String id = "madnite1";
 
