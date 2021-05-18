@@ -11,6 +11,8 @@
         <property name="password" value="" />
     </bean>
     -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost/testdb" />
@@ -26,7 +28,8 @@
         <property name="transactionManager" ref="transactionManager" />
     </bean>
 
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+    <bean id="transactionPointcut" class="com.example.tobyspring.user.service.NameMatchClassMethodPointcut">
+        <property name="mappedClassName" value="*ServiceImpl" />
         <property name="mappedName" value="upgrade*" />
     </bean>
 
@@ -35,19 +38,12 @@
         <property name="pointcut" ref="transactionPointcut" />
     </bean>
 
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl" />
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="userServiceImpl" class="com.example.tobyspring.user.service.UserServiceImpl">
+    <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao" />
         <property name="mailSender" ref="mailSender" />
     </bean>
+
+    <bean id="testUserService" class="com.example.tobyspring.user.service.UserServiceTest$TestUserServiceImpl" parent="userService" />
 
     <bean id="userDao" class="com.example.tobyspring.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource" />

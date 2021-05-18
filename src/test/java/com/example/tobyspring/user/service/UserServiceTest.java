@@ -30,13 +30,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(locations = "/test-applicationContext.xml")
-@ContextConfiguration(classes = UserFactory.class)
+@ContextConfiguration(locations = "/test-applicationContext.xml")
+//@ContextConfiguration(classes = UserFactory.class)
 class UserServiceTest {
     @Autowired
     UserDao userDao;
     @Autowired
     UserService userService;
+    @Autowired
+    UserService testUserService;
     @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
@@ -139,12 +141,8 @@ class UserServiceTest {
         assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
     }
 
-    static class TestUserService extends UserServiceImpl {
-        private String id;
-
-        public TestUserService(String id) {
-            this.id = id;
-        }
+    static class TestUserServiceImpl extends UserServiceImpl {
+        private String id = "madnite1";
 
         @Override
         protected void upgradeLevel(User user) {
@@ -157,21 +155,12 @@ class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeAllOrNothing() throws Exception {
-        UserServiceImpl testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(userDao);
-        testUserService.setMailSender(mailSender);
-
-        ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService)txProxyFactoryBean.getObject();
-
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
         try {
-            txUserService.upgradeLevels();
+            testUserService.upgradeLevels();
             fail("TestUserServiceException expected"); // upgradeLevels 메소드에서 Exception이 발생하지 않을 경우 테스트 실패
         } catch (TestUserServiceException e) {
         }
