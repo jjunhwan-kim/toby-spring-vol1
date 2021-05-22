@@ -32,8 +32,7 @@
     </bean>
 
     <aop:config>
-        <aop:pointcut id="transactionPointcut" expression="execution(* *..*ServiceImpl.upgrade*(..))" />
-        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut" />
+        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))" />
     </aop:config>
 
     <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
