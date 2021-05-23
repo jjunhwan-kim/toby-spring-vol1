@@ -35,23 +35,21 @@
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="get*">PROPAGATION_REQUIRED,readOnly,timeout_30</prop>
-                <prop key="upgrade*">PROPAGATION_REQUIRES_NEW,ISOLATION_SERIALIZABLE</prop>
+                <prop key="get*">PROPAGATION_REQUIRED, readOnly</prop>
                 <prop key="*">PROPAGATION_REQUIRED</prop>
             </props>
         </property>
     </bean>
     -->
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30" />
-            <tx:method name="upgrade*" propagation="REQUIRES_NEW" isolation="SERIALIZABLE" />
-            <tx:method name="*" propagation="REQUIRED" />
-        </tx:attributes>
+    <tx:advice id="transactionAdvice">
+      <tx:attributes>
+          <tx:method name="get*" read-only="true" />
+          <tx:method name="*" />
+      </tx:attributes>
     </tx:advice>
 
     <aop:config>
-        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))" />
+        <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
     </aop:config>
 
     <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
