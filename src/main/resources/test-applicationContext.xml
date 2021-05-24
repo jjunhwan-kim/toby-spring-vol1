@@ -17,7 +17,6 @@
         <property name="password" value="" />
     </bean>
     -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
@@ -30,7 +29,11 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <tx:annotation-driven />
+
     <!--
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
     <bean id="transactionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
@@ -40,7 +43,7 @@
             </props>
         </property>
     </bean>
-    -->
+
     <tx:advice id="transactionAdvice">
       <tx:attributes>
           <tx:method name="get*" read-only="true" />
@@ -51,6 +54,7 @@
     <aop:config>
         <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
     </aop:config>
+    -->
 
     <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao" />
