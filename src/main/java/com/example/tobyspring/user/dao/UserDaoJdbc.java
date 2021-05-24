@@ -15,6 +15,37 @@ import java.util.List;
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
+    private String sqlAdd;
+    private String sqlGet;
+    private String sqlUpdate;
+    private String sqlDeleteAll;
+    private String sqlGetCount;
+    private String sqlGetAll;
+
+    public void setSqlAdd(String sqlAdd) {
+        this.sqlAdd = sqlAdd;
+    }
+
+    public void setSqlGet(String sqlGet) {
+        this.sqlGet = sqlGet;
+    }
+
+    public void setSqlUpdate(String sqlUpdate) {
+        this.sqlUpdate = sqlUpdate;
+    }
+
+    public void setSqlDeleteAll(String sqlDeleteAll) {
+        this.sqlDeleteAll = sqlDeleteAll;
+    }
+
+    public void setSqlGetCount(String sqlGetCount) {
+        this.sqlGetCount = sqlGetCount;
+    }
+
+    public void setSqlGetAll(String sqlGetAll) {
+        this.sqlGetAll = sqlGetAll;
+    }
+
     private RowMapper<User> userMapper = new RowMapper<User>() {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -36,7 +67,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void add(User user) {
-        this.jdbcTemplate.update("insert into users(id, name, password, email, level, login, recommend) values(?,?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(),user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
+        this.jdbcTemplate.update(sqlAdd, user.getId(), user.getName(), user.getPassword(),user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
 
     /*
@@ -55,28 +86,28 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public User get(String id) {
-        return this.jdbcTemplate.queryForObject("select * from users where id = ?", this.userMapper, id);
+        return this.jdbcTemplate.queryForObject(sqlGet, this.userMapper, id);
     }
 
     @Override
     public void update(User user) {
-        this.jdbcTemplate.update("update users set name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? where id = ?", user.getName(), user.getPassword(), user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+        this.jdbcTemplate.update(sqlUpdate, user.getName(), user.getPassword(), user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
     }
 
     @Override
     public void deleteAll() {
-        this.jdbcTemplate.update("delete from users");
+        this.jdbcTemplate.update(sqlDeleteAll);
     }
 
     @Override
     public int getCount() {
-        Integer value = this.jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
+        Integer value = this.jdbcTemplate.queryForObject(sqlGetCount, Integer.class);
         if (value == null) return 0;
         return value;
     }
 
     @Override
     public List<User> getAll() {
-        return this.jdbcTemplate.query("select * from users order by id", this.userMapper);
+        return this.jdbcTemplate.query(sqlGetAll, this.userMapper);
     }
 }
