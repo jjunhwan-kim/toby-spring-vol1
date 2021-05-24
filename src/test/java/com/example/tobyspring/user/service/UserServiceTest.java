@@ -16,10 +16,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.ArrayList;
@@ -176,20 +178,12 @@ class UserServiceTest {
     }
 
     @Test
+    @Transactional
+    //@Rollback(false)
     public void transactionSync() {
-        userDao.deleteAll();
-        assertThat(userDao.getCount()).isEqualTo(0);
-
-        DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
-        TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
-
+        userService.deleteAll();
         userService.add(users.get(0));
         userService.add(users.get(1));
-        assertThat(userDao.getCount()).isEqualTo(2);
-
-        transactionManager.rollback(txStatus);
-
-        assertThat(userDao.getCount()).isEqualTo(0);
     }
 
     @Test
