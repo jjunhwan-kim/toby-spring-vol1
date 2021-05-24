@@ -19,6 +19,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,6 +173,23 @@ class UserServiceTest {
     @Test
     public void readOnlyTransactionAttribute() {
         assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
+    }
+
+    @Test
+    public void transactionSync() {
+        userDao.deleteAll();
+        assertThat(userDao.getCount()).isEqualTo(0);
+
+        DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
+        TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+
+        userService.add(users.get(0));
+        userService.add(users.get(1));
+        assertThat(userDao.getCount()).isEqualTo(2);
+
+        transactionManager.rollback(txStatus);
+
+        assertThat(userDao.getCount()).isEqualTo(0);
     }
 
     @Test
