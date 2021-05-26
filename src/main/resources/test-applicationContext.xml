@@ -73,6 +73,9 @@
         <property name="sqlService" ref="sqlService" />
     </bean>
 
+    <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.DefaultSqlService" />
+
+    <!--
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.BaseSqlService">
         <property name="sqlReader" ref="sqlReader" />
         <property name="sqlRegistry" ref="sqlRegistry" />
@@ -84,6 +87,6 @@
 
     <bean id="sqlRegistry" class="com.example.tobyspring.user.sqlservice.HashMapSqlRegistry">
     </bean>
-
+    -->
     <bean id="mailSender" class="com.example.tobyspring.user.service.DummyMailSender" />
 </beans>
