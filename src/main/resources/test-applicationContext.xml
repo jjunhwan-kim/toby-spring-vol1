@@ -73,10 +73,16 @@
         <property name="sqlService" ref="sqlService" />
     </bean>
 
-    <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.XmlSqlService">
-        <property name="sqlReader" ref="sqlService" />
-        <property name="sqlRegistry" ref="sqlService" />
+    <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.BaseSqlService">
+        <property name="sqlReader" ref="sqlReader" />
+        <property name="sqlRegistry" ref="sqlRegistry" />
+    </bean>
+
+    <bean id="sqlReader" class="com.example.tobyspring.user.sqlservice.JaxbXmlReader">
         <property name="sqlmapFile" value="/sqlmap.xml" />
+    </bean>
+
+    <bean id="sqlRegistry" class="com.example.tobyspring.user.sqlservice.HashMapSqlRegistry">
     </bean>
 
     <bean id="mailSender" class="com.example.tobyspring.user.service.DummyMailSender" />
