@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 
-public class JaxbXmlReader implements SqlReader {
+public class JaxbXmlSqlReader implements SqlReader {
     private static final String DEFAULT_SQLMAP_FILE = "/sqlmap.xml";
 
     private String sqlmapFile = DEFAULT_SQLMAP_FILE;
