@@ -73,8 +73,13 @@
         <property name="sqlService" ref="sqlService" />
     </bean>
 
-    <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.DefaultSqlService" />
+    <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.OxmSqlService">
+        <property name="unmarshaller" ref="unmarshaller" />
+    </bean>
 
+    <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="com.example.tobyspring.user.sqlservice.jaxb" />
+    </bean>
     <!--
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.BaseSqlService">
         <property name="sqlReader" ref="sqlReader" />
