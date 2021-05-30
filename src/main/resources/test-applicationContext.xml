@@ -75,6 +75,9 @@
 
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller" />
+        <property name="sqlmap" value="classpath:sqlmap.xml" />
+        <!--<property name="sqlmap" value="http://www.epril.com/resources/sqlmap.xml" /> -->
+        <!--<property name="sqlmap" value="file:/Users/junhwan/Desktop/Web/Spring/project/toby-spring/src/main/resources/sqlmap.xml" /> -->
     </bean>
 
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
