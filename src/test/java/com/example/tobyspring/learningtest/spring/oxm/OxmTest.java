@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/OxmTest-context.xml")
-public class OxmTest {
+class OxmTest {
     @Autowired
     Unmarshaller unmarshaller;
 

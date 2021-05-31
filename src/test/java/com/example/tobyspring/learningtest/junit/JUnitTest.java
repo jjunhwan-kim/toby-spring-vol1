@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = JUnitTest.TestConfig.class)
-public class JUnitTest {
+class JUnitTest {
     @Autowired
     ApplicationContext context;
 

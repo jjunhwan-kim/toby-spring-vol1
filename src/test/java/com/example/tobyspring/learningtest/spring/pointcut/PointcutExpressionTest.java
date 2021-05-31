@@ -5,7 +5,7 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PointcutExpressionTest {
+class PointcutExpressionTest {
 
     @Test
     public void methodSignaturePointcut() throws SecurityException, NoSuchMethodException {

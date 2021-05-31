@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class CalcSumTest {
+class CalcSumTest {
     Calculator calculator;
     String numFilepath;
 

@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ReflectionTest {
+class ReflectionTest {
     @Test
     public void invokeMethod() throws Exception {
         String name = "Spring";

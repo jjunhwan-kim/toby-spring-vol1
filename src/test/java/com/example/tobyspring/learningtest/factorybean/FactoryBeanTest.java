@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 //@ContextConfiguration(locations = "/FactoryBeanTest-context.xml")
 @ContextConfiguration(classes = FactoryBeanTest.MessageFactoryBeanFactory.class)
 
-public class FactoryBeanTest {
+class FactoryBeanTest {
     @Autowired
     ApplicationContext context;
 

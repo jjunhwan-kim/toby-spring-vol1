@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JaxbTest {
+class JaxbTest {
     @Test
     public void readSqlmap() throws JAXBException {
         String contextPath = Sqlmap.class.getPackage().getName();
