@@ -78,6 +78,10 @@
         <property name="sqlmap" value="classpath:sqlmap.xml" />
         <!--<property name="sqlmap" value="http://www.epril.com/resources/sqlmap.xml" /> -->
         <!--<property name="sqlmap" value="file:/Users/junhwan/Desktop/Web/Spring/project/toby-spring/src/main/resources/sqlmap.xml" /> -->
+        <property name="sqlRegistry" ref="sqlRegistry" />
+    </bean>
+
+    <bean id="sqlRegistry" class="com.example.tobyspring.user.sqlservice.updatable.ConcurrentHashMapSqlRegistry">
     </bean>
 
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
