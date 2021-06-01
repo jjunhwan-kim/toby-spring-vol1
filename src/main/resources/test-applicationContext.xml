@@ -15,6 +15,8 @@
                 http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
                 http://www.springframework.org/schema/jdbc
                 http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+
+    <!-- db -->
     <!--
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="org.h2.Driver" />
@@ -35,10 +37,13 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <!-- aop -->
     <tx:annotation-driven />
 
+    <!--
     <context:annotation-config />
-
+    -->
+    
     <!--
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
@@ -64,6 +69,7 @@
     </aop:config>
     -->
 
+    <!-- application components -->
     <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao" />
         <property name="mailSender" ref="mailSender" />
@@ -76,6 +82,9 @@
         <property name="sqlService" ref="sqlService" />
     </bean>
 
+    <bean id="mailSender" class="com.example.tobyspring.user.service.DummyMailSender" />
+
+    <!-- sql service -->
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller" />
         <property name="sqlmap" value="classpath:sqlmap.xml" />
@@ -95,6 +104,7 @@
     <jdbc:embedded-database id="embeddedDatabase" type="H2">
         <jdbc:script location="classpath:sqlRegistrySchema.sql" />
     </jdbc:embedded-database>
+
     <!--
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.BaseSqlService">
         <property name="sqlReader" ref="sqlReader" />
@@ -108,5 +118,4 @@
     <bean id="sqlRegistry" class="com.example.tobyspring.user.sqlservice.HashMapSqlRegistry">
     </bean>
     -->
-    <bean id="mailSender" class="com.example.tobyspring.user.service.DummyMailSender" />
 </beans>
