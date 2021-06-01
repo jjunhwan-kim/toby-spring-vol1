@@ -72,6 +72,7 @@
     -->
 
     <!-- application components -->
+    <!--
     <bean id="userService" class="com.example.tobyspring.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao" />
         <property name="mailSender" ref="mailSender" />
@@ -85,6 +86,7 @@
     </bean>
 
     <bean id="mailSender" class="com.example.tobyspring.user.service.DummyMailSender" />
+    -->
 
     <!-- sql service -->
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.OxmSqlService">

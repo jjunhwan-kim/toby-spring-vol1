@@ -152,27 +152,6 @@ class UserServiceTest {
         assertThat(testUserService).isInstanceOf(java.lang.reflect.Proxy.class);
     }
 
-    static class TestUserServiceImpl extends UserServiceImpl {
-        private String id = "madnite1";
-
-        @Override
-        protected void upgradeLevel(User user) {
-            if (user.getId().equals(this.id)) throw new TestUserServiceException();
-            super.upgradeLevel(user);
-        }
-
-        @Override
-        public List<User> getAll() {
-            for (User user : super.getAll()) {
-                super.update(user);
-            }
-            return null;
-        }
-    }
-
-    static class TestUserServiceException extends RuntimeException {
-    }
-
     @Test
     public void readOnlyTransactionAttribute() {
         assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
