@@ -89,11 +89,10 @@
     -->
 
     <!-- sql service -->
+    <!--
     <bean id="sqlService" class="com.example.tobyspring.user.sqlservice.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller" />
         <property name="sqlmap" value="classpath:sqlmap.xml" />
-        <!--<property name="sqlmap" value="http://www.epril.com/resources/sqlmap.xml" /> -->
-        <!--<property name="sqlmap" value="file:/Users/junhwan/Desktop/Web/Spring/project/toby-spring/src/main/resources/sqlmap.xml" /> -->
         <property name="sqlRegistry" ref="sqlRegistry" />
     </bean>
 
@@ -104,6 +103,7 @@
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="com.example.tobyspring.user.sqlservice.jaxb" />
     </bean>
+    -->
 
     <jdbc:embedded-database id="embeddedDatabase" type="H2">
         <jdbc:script location="classpath:sqlRegistrySchema.sql" />
