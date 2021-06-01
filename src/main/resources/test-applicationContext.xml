@@ -24,7 +24,6 @@
         <property name="username" value="sa" />
         <property name="password" value="" />
     </bean>
-    -->
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
@@ -32,10 +31,13 @@
         <property name="username" value="root" />
         <property name="password" value="" />
     </bean>
+    -->
 
+    <!--
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    -->
 
     <!-- aop -->
     <tx:annotation-driven />
@@ -43,7 +45,7 @@
     <!--
     <context:annotation-config />
     -->
-    
+
     <!--
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
