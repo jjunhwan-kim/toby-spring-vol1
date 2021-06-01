@@ -1,5 +1,6 @@
 package com.example.tobyspring.user.dao;
 
+import com.example.tobyspring.TestApplicationContext;
 import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
+//@ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = TestApplicationContext.class)
 class UserDaoTest {
     @Autowired
     private UserDao dao;
