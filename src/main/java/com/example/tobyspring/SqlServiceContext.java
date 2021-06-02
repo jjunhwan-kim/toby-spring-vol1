@@ -4,6 +4,7 @@ import com.example.tobyspring.user.sqlservice.OxmSqlService;
 import com.example.tobyspring.user.sqlservice.SqlRegistry;
 import com.example.tobyspring.user.sqlservice.SqlService;
 import com.example.tobyspring.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -16,12 +17,15 @@ import javax.sql.DataSource;
 
 @Configuration
 public class SqlServiceContext {
+    @Autowired
+    SqlMapConfig sqlMapConfig;
+
     @Bean
     public SqlService sqlService() {
         OxmSqlService sqlService = new OxmSqlService();
         sqlService.setUnmarshaller(unmarshaller());
         sqlService.setSqlRegistry(sqlRegistry());
-        sqlService.setSqlmap(new ClassPathResource("/sqlmap.xml"));
+        sqlService.setSqlmap(sqlMapConfig.getSqlMapResource());
         return sqlService;
     }
 

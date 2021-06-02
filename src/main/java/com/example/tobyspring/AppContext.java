@@ -68,6 +68,11 @@ public class AppContext {
         return tm;
     }
 
+    @Bean
+    public SqlMapConfig sqlMapConfig() {
+        return new UserSqlMapConfig();
+    }
+
     @Configuration
     @Profile("production")
     public static class ProductionAppContext {
