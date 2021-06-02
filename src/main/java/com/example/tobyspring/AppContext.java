@@ -19,6 +19,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -31,7 +32,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
-@Import(SqlServiceContext.class)
+@Import({SqlServiceContext.class, TestAppContext.class, ProductionAppContext.class})
 public class AppContext {
     @Bean
     public DataSource dataSource() {

@@ -12,6 +12,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -23,8 +24,9 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 //@ContextConfiguration(locations = "/test-applicationContext.xml")
-@ContextConfiguration(classes = {TestAppContext.class, AppContext.class})
+@ContextConfiguration(classes = AppContext.class)
 class UserDaoTest {
     @Autowired
     private UserDao dao;
