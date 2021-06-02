@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
@@ -35,6 +36,16 @@ class UserDaoTest {
     private User user1;
     private User user2;
     private User user3;
+
+    @Autowired
+    private DefaultListableBeanFactory bf;
+
+    @Test
+    public void beans() {
+        for (String n : bf.getBeanDefinitionNames()) {
+            System.out.println(n + " \t " + bf.getBean(n).getClass().getName());
+        }
+    }
 
     @BeforeEach
     public void setUp() {
