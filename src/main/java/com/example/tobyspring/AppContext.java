@@ -11,7 +11,9 @@ import com.example.tobyspring.user.sqlservice.SqlRegistry;
 import com.example.tobyspring.user.sqlservice.SqlService;
 import com.example.tobyspring.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.sql.Driver;
 
 @Configuration
 @EnableTransactionManagement
@@ -36,23 +39,24 @@ import javax.sql.DataSource;
 @Import(SqlServiceContext.class)
 @PropertySource("/database.properties")
 public class AppContext {
-    @Autowired
-    Environment env;
+    @Value("${db.driverClass}") Class<? extends Driver> driverClass;
+    @Value("${db.url}") String url;
+    @Value("${db.username}") String username;
+    @Value("${db.password}") String password;
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
-        try {
-            ds.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
-        }
-        catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        ds.setUrl(env.getProperty("db.url"));
-        ds.setUsername(env.getProperty("db.username"));
-        ds.setPassword(env.getProperty("db.password"));
+        ds.setDriverClass(driverClass);
+        ds.setUrl(url);
+        ds.setUsername(username);
+        ds.setPassword(password);
 
         return ds;
     }
