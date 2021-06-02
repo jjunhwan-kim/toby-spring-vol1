@@ -11,10 +11,7 @@ import com.example.tobyspring.user.sqlservice.SqlRegistry;
 import com.example.tobyspring.user.sqlservice.SqlService;
 import com.example.tobyspring.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -34,6 +31,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
+@Import(SqlServiceContext.class)
 public class AppContext {
     @Bean
     public DataSource dataSource() {
@@ -50,38 +48,5 @@ public class AppContext {
         DataSourceTransactionManager tm = new DataSourceTransactionManager();
         tm.setDataSource(dataSource());
         return tm;
-    }
-
-
-    @Bean
-    public SqlService sqlService() {
-        OxmSqlService sqlService = new OxmSqlService();
-        sqlService.setUnmarshaller(unmarshaller());
-        sqlService.setSqlRegistry(sqlRegistry());
-        sqlService.setSqlmap(new ClassPathResource("/sqlmap.xml"));
-        return sqlService;
-    }
-
-    @Bean
-    public SqlRegistry sqlRegistry() {
-        EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
-        sqlRegistry.setDataSource(embeddedDatabase());
-        return sqlRegistry;
-    }
-
-    @Bean
-    public Unmarshaller unmarshaller() {
-        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("com.example.tobyspring.user.sqlservice.jaxb");
-        return marshaller;
-    }
-
-    @Bean
-    public DataSource embeddedDatabase() {
-        return new EmbeddedDatabaseBuilder()
-                .setName("embeddedDatabase")
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("classpath:sqlRegistrySchema.sql")
-                .build();
     }
 }
