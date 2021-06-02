@@ -12,6 +12,7 @@ import com.example.tobyspring.user.sqlservice.SqlService;
 import com.example.tobyspring.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -33,14 +34,26 @@ import javax.sql.DataSource;
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
 @Import(SqlServiceContext.class)
+@PropertySource("/database.properties")
 public class AppContext {
+    @Autowired
+    Environment env;
+
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(com.mysql.cj.jdbc.Driver.class);
-        ds.setUrl("jdbc:mysql://localhost/testdb");
-        ds.setUsername("root");
-        ds.setPassword("");
+
+        try {
+            ds.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        ds.setUrl(env.getProperty("db.url"));
+        ds.setUsername(env.getProperty("db.username"));
+        ds.setPassword(env.getProperty("db.password"));
+
         return ds;
     }
 
