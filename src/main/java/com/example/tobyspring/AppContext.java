@@ -32,7 +32,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
-@Import({SqlServiceContext.class, TestAppContext.class, ProductionAppContext.class})
+@Import(SqlServiceContext.class)
 public class AppContext {
     @Bean
     public DataSource dataSource() {
@@ -49,5 +49,30 @@ public class AppContext {
         DataSourceTransactionManager tm = new DataSourceTransactionManager();
         tm.setDataSource(dataSource());
         return tm;
+    }
+
+    @Configuration
+    @Profile("production")
+    public static class ProductionAppContext {
+        @Bean
+        public MailSender mailSender() {
+            JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+            mailSender.setHost("mail.mycompany.com");
+            return mailSender;
+        }
+    }
+
+    @Configuration
+    @Profile("test")
+    public static class TestAppContext {
+        @Bean
+        public UserService testUserService() {
+            return new TestUserService();
+        }
+
+        @Bean
+        public MailSender mailSender() {
+            return new DummyMailSender();
+        }
     }
 }

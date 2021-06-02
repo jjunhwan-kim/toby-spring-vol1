@@ -1,7 +1,6 @@
 package com.example.tobyspring.user.dao;
 
 import com.example.tobyspring.AppContext;
-import com.example.tobyspring.TestAppContext;
 import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
