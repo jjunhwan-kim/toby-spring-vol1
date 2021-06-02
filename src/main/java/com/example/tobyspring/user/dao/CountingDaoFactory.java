@@ -4,19 +4,19 @@ import org.springframework.context.annotation.Bean;
 
 //@Configuration
 public class CountingDaoFactory {
-    @Bean
+    //@Bean
     public UserDao userDao() {
         UserDao userDao = new UserDaoJdbc();
 //        userDao.setConnectionMaker(connectionMaker());
         return userDao;
     }
 
-    @Bean
+    //@Bean
     public ConnectionMaker connectionMaker() {
         return new CountingConnectionMaker(realConnectionMaker());
     }
 
-    @Bean
+    //@Bean
     public ConnectionMaker realConnectionMaker() {
         return new DConnectionMaker();
     }

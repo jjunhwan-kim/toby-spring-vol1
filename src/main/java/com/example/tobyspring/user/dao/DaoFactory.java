@@ -8,14 +8,14 @@ import javax.sql.DataSource;
 
 //@Configuration
 public class DaoFactory {
-    @Bean
+    //@Bean
     public UserDaoJdbc userDao() {
         UserDaoJdbc userDao = new UserDaoJdbc();
         userDao.setDataSource(dataSource());
         return userDao;
     }
 
-    @Bean
+    //@Bean
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(org.h2.Driver.class);
