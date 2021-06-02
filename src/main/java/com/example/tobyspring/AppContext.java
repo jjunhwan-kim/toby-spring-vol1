@@ -34,10 +34,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
-public class TestApplicationContext {
-    @Autowired
-    UserDao userDao;
-
+public class AppContext {
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -55,18 +52,6 @@ public class TestApplicationContext {
         return tm;
     }
 
-    @Bean
-    public UserService testUserService() {
-        TestUserService testService = new TestUserService();
-        testService.setUserDao(userDao);
-        testService.setMailSender(mailSender());
-        return testService;
-    }
-
-    @Bean
-    public MailSender mailSender() {
-        return new DummyMailSender();
-    }
 
     @Bean
     public SqlService sqlService() {
