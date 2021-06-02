@@ -36,7 +36,8 @@ import java.sql.Driver;
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
 @ComponentScan(basePackages = "com.example.tobyspring.user")
-@Import(SqlServiceContext.class)
+//@Import(SqlServiceContext.class)
+@EnableSqlService
 @PropertySource("/database.properties")
 public class AppContext implements SqlMapConfig {
     @Value("${db.driverClass}") Class<? extends Driver> driverClass;
