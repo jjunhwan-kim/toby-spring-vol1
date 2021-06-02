@@ -13,8 +13,9 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class UserFactory {
+    /*
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
@@ -82,4 +83,5 @@ public class UserFactory {
     public DummyMailSender mailSender() {
         return new DummyMailSender();
     }
+    */
 }

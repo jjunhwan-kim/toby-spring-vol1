@@ -4,6 +4,7 @@ import com.example.tobyspring.user.domain.Level;
 import com.example.tobyspring.user.domain.User;
 import com.example.tobyspring.user.sqlservice.SqlService;
 import com.mysql.cj.exceptions.MysqlErrorNumbers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,11 +17,9 @@ import java.util.Map;
 
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
     private SqlService sqlService;
-
-    public void setSqlService(SqlService sqlService) {
-        this.sqlService = sqlService;
-    }
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
         @Override
@@ -37,6 +36,7 @@ public class UserDaoJdbc implements UserDao {
         }
     };
 
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
