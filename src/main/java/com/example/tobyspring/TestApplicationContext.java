@@ -12,6 +12,7 @@ import com.example.tobyspring.user.sqlservice.SqlService;
 import com.example.tobyspring.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.ClassPathResource;
@@ -32,7 +33,11 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 //@ImportResource("/test-applicationContext.xml")
+@ComponentScan(basePackages = "com.example.tobyspring.user")
 public class TestApplicationContext {
+    @Autowired
+    UserDao userDao;
+
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -51,22 +56,9 @@ public class TestApplicationContext {
     }
 
     @Bean
-    public UserDao userDao() {
-        return new UserDaoJdbc();
-    }
-
-    @Bean
-    public UserService userService() {
-        UserServiceImpl service = new UserServiceImpl();
-        service.setUserDao(userDao());
-        service.setMailSender(mailSender());
-        return service;
-    }
-
-    @Bean
     public UserService testUserService() {
         TestUserService testService = new TestUserService();
-        testService.setUserDao(userDao());
+        testService.setUserDao(userDao);
         testService.setMailSender(mailSender());
         return testService;
     }
